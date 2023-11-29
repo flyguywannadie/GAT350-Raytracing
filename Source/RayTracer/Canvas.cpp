@@ -5,8 +5,9 @@
 Canvas::Canvas(int width, int height, const Renderer& renderer)
 {
 	m_size = { width, height };
+	m_texture = SDL_CreateTexture(renderer.renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, width, height);
+	
 	m_buffer.resize(width * height);
-	m_texture = SDL_CreateTexture(renderer.renderer, *m_buffer.data(), SDL_TEXTUREACCESS_STREAMING, width, height);
 }
 
 Canvas::~Canvas()
