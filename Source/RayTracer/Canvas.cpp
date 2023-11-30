@@ -1,6 +1,5 @@
 #include "Canvas.h"
 #include "Renderer.h"
-#include "SDL.h"
 
 Canvas::Canvas(int width, int height, const Renderer& renderer)
 {
