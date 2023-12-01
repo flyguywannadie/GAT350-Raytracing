@@ -4,6 +4,8 @@
 #include "Canvas.h"
 #include "Camera.h"
 #include "Scene.h"
+#include "Material.h"
+#include "Sphere.h"
 #include "Renderer.h"
 
 int main(int, char**) {
@@ -18,10 +20,17 @@ int main(int, char**) {
 	Canvas canvas(400, 300, renderer);
 
 	float aspectRatio = canvas.GetSize().x / (float)canvas.GetSize().y;
-	std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3{ 0, 0, 1 }, glm::vec3{ 0, 0, 0 }, glm::vec3{ 0, 1, 0 }, 70.0f, aspectRatio);
+	std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3{ 0, 0, 2 }, glm::vec3{ 0, 0, 0 }, glm::vec3{ 0, 1, 0 }, 70.0f, aspectRatio);
 
 	Scene scene; // sky color could be set with the top and bottom color
 	scene.SetCamera(camera);
+
+	// create material
+	auto material = std::make_shared<Lambertian>(color3_t{ 0, 0, 1 });
+
+	// create objects -> add to scene
+	auto sphere = std::make_unique<Sphere>(glm::vec3{ 4,0,2 }, 1.0f, material);
+	scene.AddObject(std::move(sphere));
 
 	bool quit = false;
 	while (!quit) {
@@ -46,7 +55,7 @@ int main(int, char**) {
 		//canvas.Update();
 
 		//canvas.Clear({ 0, 0, 0, 1 });
-		for (int i = 0; i < 1000; i++) canvas.DrawPoint({ random(0, canvas.GetSize().x),random(0, canvas.GetSize().y) }, { random(0,1), random(0,1), random(0,1), 1 });
+		//for (int i = 0; i < 1000; i++) canvas.DrawPoint({ random(0, canvas.GetSize().x),random(0, canvas.GetSize().y) }, { random(0,1), random(0,1), random(0,1), 1 });
 		canvas.Update();
 
 		renderer.PresentCanvas(canvas);
