@@ -38,7 +38,7 @@ void Camera::CalculateViewPlane()
 	// calculate vertical vector (up vector * height)
 	m_vertical = m_up * height;
 	// calculate lower left location (origin)
-	m_lowerLeft = m_eye + (m_horizontal * 0.5f) - (m_vertical * 0.5f) - m_forward;
+	m_lowerLeft = m_eye - (m_horizontal * 0.5f) - (m_vertical * 0.5f) - m_forward;
 }
 
 ray_t Camera::GetRay(const glm::vec2& point) const

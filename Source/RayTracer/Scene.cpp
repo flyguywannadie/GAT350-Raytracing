@@ -55,7 +55,7 @@ color3_t Scene::Trace(const ray_t& ray, float minDistance, float maxDistance, ra
  
 		if (raycastHit.material->Scatter(ray, raycastHit, color, scattered))
 		{
-			return color;
+			return color3_t{ raycastHit.distance / 50 };
 		}
 		else
 		{

@@ -20,7 +20,7 @@ int main(int, char**) {
 	Canvas canvas(400, 300, renderer);
 
 	float aspectRatio = canvas.GetSize().x / (float)canvas.GetSize().y;
-	std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3{ 0, 0, 2 }, glm::vec3{ 0, 0, 0 }, glm::vec3{ 0, 1, 0 }, 70.0f, aspectRatio);
+	std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3{ 0, 0, 1 }, glm::vec3{ 0, 0, 0 }, glm::vec3{ 0, 1, 0 }, 90.0f, aspectRatio);
 
 	Scene scene; // sky color could be set with the top and bottom color
 	scene.SetCamera(camera);
@@ -29,8 +29,11 @@ int main(int, char**) {
 	auto material = std::make_shared<Lambertian>(color3_t{ 0, 0, 1 });
 
 	// create objects -> add to scene
-	auto sphere = std::make_unique<Sphere>(glm::vec3{ 4,0,2 }, 1.0f, material);
-	scene.AddObject(std::move(sphere));
+
+	for (int i = 0; i < 10; i++) {
+		auto sphere = std::make_unique<Sphere>(random({ -10, -5, -15 }, { 10, 5, -5 }), random(0.1f, 5.0f), material);
+		scene.AddObject(std::move(sphere));
+	}
 
 	bool quit = false;
 	while (!quit) {
