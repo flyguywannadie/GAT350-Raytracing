@@ -66,7 +66,8 @@ color3_t Scene::Trace(const ray_t& ray, float minDistance, float maxDistance, ra
 		color3_t color;
 
 		// check if maximum depth (number of bounces) is reached, get color from material and scattered ray
-		if (depth > 0 && raycastHit.material->Scatter(ray, raycastHit, color, scattered))
+		bool result = raycastHit.material->Scatter(ray, raycastHit, color, scattered);
+		if (depth > 0 && result)
 		{
 			// recursive function, call self and modulate (multiply) colors of depth bounces
 			return color * Trace(scattered, minDistance, maxDistance, raycastHit, depth - 1);

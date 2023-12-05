@@ -21,12 +21,12 @@ int main(int, char**) {
 	float aspectRatio = canvas.GetSize().x / (float)canvas.GetSize().y;
 	std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3{ 0, 0, 1 }, glm::vec3{ 0, 0, 0 }, glm::vec3{ 0, 1, 0 }, 90.0f, aspectRatio);
 
-	Scene scene(20, color3_t{0.8f}, color3_t{1,1,1}); // sky color could be set with the top and bottom color
+	Scene scene(1000, color3_t{0.8f}, color3_t{1,1,1}); // sky color could be set with the top and bottom color
 	scene.SetCamera(camera);
 
 	// create material
 	auto lambertian = std::make_shared<Lambertian>(color3_t{ 0, 1, 1 });
-	auto metal = std::make_shared<Metal>(color3_t{ 1, 1, 1 }, 0.0f);
+	auto metal = std::make_shared<Metal>(color3_t{ 1, 1, 1 }, 1.0f);
 
 	std::shared_ptr<Material> material = std::dynamic_pointer_cast<Material>(metal);
 	auto sphere = std::make_unique<Sphere>(glm::vec3{0,0,-5}, 1.0f, material);
