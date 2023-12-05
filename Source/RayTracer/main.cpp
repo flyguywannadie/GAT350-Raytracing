@@ -1,12 +1,11 @@
 #include <iostream>
-#include "Color.h"
+#include "Renderer.h"
 #include "Random.h"
 #include "Canvas.h"
 #include "Camera.h"
 #include "Scene.h"
 #include "Material.h"
 #include "Sphere.h"
-#include "Renderer.h"
 
 int main(int, char**) {
 	std::cout << "Hello World!" << std::endl;
@@ -22,18 +21,30 @@ int main(int, char**) {
 	float aspectRatio = canvas.GetSize().x / (float)canvas.GetSize().y;
 	std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3{ 0, 0, 1 }, glm::vec3{ 0, 0, 0 }, glm::vec3{ 0, 1, 0 }, 90.0f, aspectRatio);
 
-	Scene scene; // sky color could be set with the top and bottom color
+	Scene scene(20, color3_t{0.8f}, color3_t{1,1,1}); // sky color could be set with the top and bottom color
 	scene.SetCamera(camera);
 
 	// create material
-	auto material = std::make_shared<Lambertian>(color3_t{ 0, 0, 1 });
+	auto lambertian = std::make_shared<Lambertian>(color3_t{ 0, 1, 1 });
+	auto metal = std::make_shared<Metal>(color3_t{ 1, 1, 1 }, 0.0f);
+
+	std::shared_ptr<Material> material = std::dynamic_pointer_cast<Material>(metal);
+	auto sphere = std::make_unique<Sphere>(glm::vec3{0,0,-5}, 1.0f, material);
+	scene.AddObject(std::move(sphere));
 
 	// create objects -> add to scene
+	for (int i = 0; i < 10; i++)
+	{
+		material = (rand() % 2 == 1) ? std::dynamic_pointer_cast<Material>(lambertian) : std::dynamic_pointer_cast<Material>(metal);
 
-	for (int i = 0; i < 10; i++) {
-		auto sphere = std::make_unique<Sphere>(random({ -10, -5, -15 }, { 10, 5, -5 }), random(0.1f, 5.0f), material);
+		auto sphere = std::make_unique<Sphere>(random(glm::vec3{ -10, -5, -15 }, glm::vec3{ 10, 5, -5 }), random(0.1f, 5.0f), material);
 		scene.AddObject(std::move(sphere));
 	}
+
+	// render scene 
+	canvas.Clear({ 0, 1, 0, 1 });
+	scene.Render(canvas, 100);
+	canvas.Update();
 
 	bool quit = false;
 	while (!quit) {
@@ -53,13 +64,9 @@ int main(int, char**) {
 			break;
 		}
 
-		canvas.Clear({ 0, 0, 0, 1 });
-		scene.Render(canvas);
-		//canvas.Update();
-
 		//canvas.Clear({ 0, 0, 0, 1 });
 		//for (int i = 0; i < 1000; i++) canvas.DrawPoint({ random(0, canvas.GetSize().x),random(0, canvas.GetSize().y) }, { random(0,1), random(0,1), random(0,1), 1 });
-		canvas.Update();
+		//canvas.Update();
 
 		renderer.PresentCanvas(canvas);
 	}
