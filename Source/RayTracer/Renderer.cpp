@@ -1,5 +1,5 @@
-#include "Canvas.h"
 #include "Renderer.h"
+#include "Canvas.h"
 #include <iostream>
 
 bool Renderer::Initialize()
