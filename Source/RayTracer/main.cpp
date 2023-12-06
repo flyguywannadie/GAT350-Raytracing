@@ -1,4 +1,3 @@
-#include <iostream>
 #include "Renderer.h"
 #include "Random.h"
 #include "Canvas.h"
@@ -9,6 +8,7 @@
 #include "Plane.h"
 #include "Triangle.h"
 #include <glm/gtx/color_space.hpp>
+#include <iostream>
 
 int main(int, char**) {
 	std::cout << "Hello World!" << std::endl;
