@@ -137,7 +137,7 @@ void InitScene03(Scene& scene, const Canvas& canvas)
 	scene.AddObject(std::move(plane));
 	plane = std::make_unique<Plane>(glm::vec3{ 0.5f, 0, 0 }, glm::vec3{ -1, 0, 0 }, std::make_shared<Lambertian>(color3_t{ 0, 1, 0 }));
 	scene.AddObject(std::move(plane));
-	plane = std::make_unique<Plane>(glm::vec3{ 0, 1, 0 }, glm::vec3{ 0, -1, 0 }, std::make_shared<Lambertian>(color3_t{ 1 }));
+	plane = std::make_unique<Plane>(glm::vec3{ 0, 1, 0 }, glm::vec3{ 0, -1, 0 }, std::make_shared<Emissive>(color3_t{ 1 }));
 	scene.AddObject(std::move(plane));
 	plane = std::make_unique<Plane>(glm::vec3{ 0, 0, 5 }, glm::vec3{ 0, 0, -1 }, std::make_shared<Lambertian>(color3_t{ 1 }));
 	scene.AddObject(std::move(plane));
@@ -147,9 +147,9 @@ void InitScene03(Scene& scene, const Canvas& canvas)
 	scene.AddObject(std::move(mesh));
 
 	mesh = std::make_unique<Mesh>(std::make_shared<Emissive>(color3_t{ 50, 50, 50 }, 1.0f));
-	mesh->Load("models/quad.obj", glm::vec3{ 0, 0.8f, 0.5f }, glm::vec3{ 90, 0, 0 }, glm::vec3{0.15f});
-	scene.AddObject(std::move(mesh));
+	mesh->Load("models/quad.obj", glm::vec3{ 0, 0.9f, 0.5f }, glm::vec3{ 90, 0, 0 }, glm::vec3{0.15f});
+	//scene.AddObject(std::move(mesh));
 
-	auto sphere = std::make_unique<Sphere>(glm::vec3{0.25f, 0.125f, -0.5f}, 0.25f, std::make_shared<Lambertian>(color3_t{ 1.0f }));
+	auto sphere = std::make_unique<Sphere>(glm::vec3{0.25f, 0.125f, -0.5f}, 0.25f, std::make_shared<Metal>(color3_t{ 1.0f }, 0.1f));
 	scene.AddObject(std::move(sphere));
 }
