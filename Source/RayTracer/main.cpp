@@ -14,13 +14,14 @@
 void InitScene01(Scene& scene, const Canvas& canvas);
 void InitScene02(Scene& scene, const Canvas& canvas);
 void InitScene03(Scene& scene, const Canvas& canvas);
+void InitScene04(Scene& scene, const Canvas& canvas);
 
 int main(int, char**) {
 
 	const int width = 400;
-	const int height = 400;
+	const int height = 300;
 	const int samples = 200;
-	const int depth = 6;
+	const int depth = 16;
 
 	std::cout << "Hello World!" << std::endl;
 
@@ -31,9 +32,9 @@ int main(int, char**) {
 	renderer.CreateWindow("piss window", width, height);
 
 	Canvas canvas(width, height, renderer);
-	Scene scene(glm::vec3{ 1.0f }, glm::vec3{ 0.5f, 0.7f, 1.0f });
+	Scene scene(glm::vec3{ 0.4f, 0, 0.5f }, glm::vec3{ 0 });
 
-	InitScene03(scene, canvas);
+	InitScene04(scene, canvas);
 
 	// render scene
 	canvas.Clear({ 0, 0, 0, 1 });
@@ -152,4 +153,35 @@ void InitScene03(Scene& scene, const Canvas& canvas)
 
 	auto sphere = std::make_unique<Sphere>(glm::vec3{0.25f, 0.125f, -0.5f}, 0.25f, std::make_shared<Metal>(color3_t{ 1.0f }, 0.1f));
 	scene.AddObject(std::move(sphere));
+}
+
+void InitScene04(Scene& scene, const Canvas& canvas)
+{
+	float aspectRatio = canvas.GetSize().x / canvas.GetSize().y;
+	std::shared_ptr<Camera> camera = std::make_shared<Camera>(glm::vec3{ 0, 2, 10 }, glm::vec3{ 0, 1, 0 }, glm::vec3{ 0, 1, 0 }, 20.0f, aspectRatio);
+	scene.SetCamera(camera);
+
+	auto triangle = std::make_unique<Triangle>(glm::vec3{ 0.25f, 0, 0 }, glm::vec3{ 0.75f, 0, 0 }, glm::vec3{ 0.5f, 1, 0 }, std::make_shared<Lambertian>(color3_t{ 1, 0, 0 }));
+	scene.AddObject(std::move(triangle));
+	triangle = std::make_unique<Triangle>(glm::vec3{ 1, 0, 0 }, glm::vec3{ 1.5f, 0, 0 }, glm::vec3{ 1.25f, 1.5f, 0 }, std::make_shared<Lambertian>(color3_t{ 0.8f }));
+	scene.AddObject(std::move(triangle));
+
+	auto plane = std::make_unique<Plane>(glm::vec3{ 0, -0.5f, 0 }, glm::vec3{ 0, 1, -0.05f }, std::make_shared<Dielectric>(color3_t{ 0.8f, 0, 0 }, 1));
+	scene.AddObject(std::move(plane));
+	plane = std::make_unique<Plane>(glm::vec3{ 0, 0, 0 }, glm::vec3{ 0, 0.9f, -0.1f }, std::make_shared<Lambertian>(color3_t{ 0.8f }));
+	scene.AddObject(std::move(plane));
+
+	auto mesh = std::make_unique<Mesh>(std::make_shared<Lambertian>(color3_t{ 1, 0.5f, 0.8f }));
+	mesh->Load("models/buddha.obj", glm::vec3{ 30, -4, -75 }, glm::vec3{ 180, 90, 0 }, glm::vec3{50,50,50});
+	//scene.AddObject(std::move(mesh)); // rip I am unable to rip
+
+	auto sphere = std::make_unique<Sphere>(glm::vec3{ 3, -4, -75 }, 10.0f, std::make_shared<Emissive>(color3_t{ 1, 0.5f, 0.8f }));
+	scene.AddObject(std::move(sphere));
+
+	auto metalmaterial = std::make_shared<Metal>(color3_t{ 1, 1, 1}, 0.0f);
+	for (int test = 0; test < 15; test++) {
+		mesh = std::make_unique<Mesh>(metalmaterial);
+		mesh->Load("models/cube.obj", glm::vec3{ random(-5, -10) + (test * 2), -3, -15 - random(10, 40)}, glm::vec3{random(0,35), random(-90, 90), 0}, glm::vec3{1,random(2, 5),1});
+		scene.AddObject(std::move(mesh));
+	}
 }
